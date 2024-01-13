@@ -1,7 +1,7 @@
 body{
     position: relative;
     height: 97vh;
-    background-image: linear-gradient(165deg,black 10%, #FEB700, #FEB700);
+    background-image: linear-gradient(165deg,blue 10%, blue, blue);
     background-repeat: no-repeat;
 }
 body > #logo{
