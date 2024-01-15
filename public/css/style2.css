@@ -1,0 +1,78 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(127deg, #0094FF 0.83%, #003E6A 83.82%);
+    color: #fff; /* Biały tekst */
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+#logo {
+    flex: 1;
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    transition: max-width 0.5s ease-in-out;
+}
+
+#logo img {
+    width: 100%;
+    height: auto;
+}
+
+#login-container {
+    flex: 1;
+    padding: 20px;
+    max-width: 400px;
+    margin: auto;
+}
+
+.register {
+    background-color: rgba(255, 255, 255, 0.8); /* Przezroczyste tło formularza */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.register input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.register input[type="submit"] {
+    background-color: #2ecc71; /* Zielony kolor przycisku */
+    color: #fff;
+    cursor: pointer;
+}
+
+.register input[type="submit"]:hover {
+    background-color: #27ae60; /* Ciemniejszy zielony kolor po najechaniu myszą */
+}
+
+.message {
+    color: #e74c3c; /* Czerwony kolor komunikatu */
+    margin-bottom: 10px;
+}
+
+@media (max-width: 767px) {
+    .container {
+        flex-direction: column;
+    }
+
+    #logo {
+        max-width: 100%;
+    }
+
+    #login-container {
+        max-width: 100%;
+    }
+}

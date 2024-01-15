@@ -1,0 +1,52 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+}
+
+header > img{
+    width: 50vw;
+}
+
+nav {
+    display: flex;
+    background-color: #333;
+    text-align: center;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+}
+
+nav a div {
+    width: 25vw;
+    padding: 20px 0;
+}
+
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+main > img{
+    width: 60vw;
+}
+
+/* Dodatkowy styl dla przykładu */
+nav a:hover div {
+    background-color: #555;
+    cursor: pointer;
+}  
+
+main span {
+    display: block;
+}
+
+.cart{
+    cursor: pointer;
+}
