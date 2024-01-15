@@ -1,0 +1,168 @@
+::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    
+}
+
+header {
+    background: linear-gradient(95deg, #0094FF 0%, #003E6A 67.29%);
+    text-align: center;
+    padding: 20px 0;
+    display: flex; /* Ustawienie nagłówka jako flex container */
+    justify-content: space-between; /* Rozmieszczenie elementów w przeciwnych kierunkach */
+    align-items: center;
+}
+
+header > div {
+    display: flex;
+    align-items: center; /* Wyśrodkowanie elementów w pionie */
+}
+
+header > div > a {
+    padding: 0;
+}
+
+header > div:first-child > img {
+    width: 100%; /* Dostosowane szerokości obrazów */
+    max-width: 150px; /* Dodane ograniczenie maksymalnej szerokości */
+}
+
+header > div:nth-child(2) > img {
+    width: 30px; /* Dostosowana szerokość ikon */
+    height: 30px; /* Dostosowana wysokość ikon */
+    margin-right: 12px; /* Dodane odstępy między ikoną a tekstem */
+}
+
+header > div:nth-child(2) > a > img {
+    width: 30px; /* Dostosowana szerokość ikon */
+    height: 30px; /* Dostosowana wysokość ikon */
+    padding: 10px;
+}
+
+header > div:nth-child(2) > a > img[alt='login'] {
+    width: 100px;
+    height: auto;
+}
+
+header > div > span {
+    color: white;
+    font-weight: bold;
+    font-size: 16px; /* Dostosowany rozmiar czcionki */
+}
+
+.cart {
+    width: 30%; /* Dostosowane szerokości obrazów */
+    max-width: 150px; /* Dodane ograniczenie maksymalnej szerokości */
+    cursor: pointer;
+}
+
+nav {
+    display: flex;
+    background-color: #003E6A;
+    text-align: center;
+    padding: 10px 0;
+}
+
+nav div {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+}
+
+nav a {
+    text-decoration: none;
+    display: block;
+    width:30px;
+    flex: 1;
+    color: white;
+    padding: 10px;
+    align-items: center;
+}
+
+nav > div > a:nth-child(1) {
+    text-align: right;
+}
+
+nav > div > a:nth-child(2) {
+    text-align: left;
+}
+
+nav a:hover div {
+    background-color: #0094FF;
+    cursor: pointer;
+}
+
+nav img {
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+}
+
+
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+main > img {
+    width: 100%; /* Zmieniłem wartość na 100% szerokości okna przeglądarki */
+    max-width: 600px; /* Dodane ograniczenie maksymalnej szerokości */
+    margin: 0 auto; /* Dodane, aby obraz był wyśrodkowany */
+}
+
+main {
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.cooler-container, .cpu-container, .motherboard-container, .ram-container {
+    width: 30%; /* Ustawiona szerokość diva */
+    border: 1px solid #ccc; /* Obramowanie na szaro */
+    margin: 20px; /* Odstęp między divami */
+    padding: 10px;
+    box-sizing: border-box;
+    min-width: 350px;
+}
+
+.cooler-container > img, .cpu-container > img, .motherboard-container > img, .ram-container > img {
+    width: 100%; /* Ustawienie, aby obrazy były responsywne */
+    height: auto;
+    margin-bottom: 10px; /* Odstęp między obrazem a tekstem */
+}
+
+.to-cart {
+    width: 30px; /* Ustawiona szerokość drugiego obrazu */
+}
+
+.cooler-container span, .cpu-container span, .motherboard-container span, .ram-container span {
+    display: block;
+    margin-bottom: 5px; /* Odstęp między poszczególnymi spanami */
+}
+
+.price {
+    font-weight: bold;
+    font-size: 20px;
+    text-align: right;
+    float: left;
+    width: 280px;
+    padding-top: 20px;
+}
+
+.cooler-container img:last-child, .cpu-container img:last-child, .motherboard-container img:last-child, .ram-container img:last-child  {
+    float: right;
+    width: 50px;
+    padding-top: 10px;
+}
+
+
+@media (max-width: 700px) {
+    nav {
+        display: block;
+    }
+}

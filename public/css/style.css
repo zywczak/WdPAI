@@ -1,0 +1,37 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+}
+
+nav {
+    display: flex;
+    background-color: #333;
+    padding: 10px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+}
+
+nav a div {
+    border: 1px solid white;
+    padding: 10px;
+    margin: 0 5px; /* Dodaj margines między divami */
+}
+
+main {
+    padding: 20px;
+}
+
+/* Dodatkowy styl dla przykładu */
+nav a:hover div {
+    background-color: #555;
+    cursor: pointer;
+}
