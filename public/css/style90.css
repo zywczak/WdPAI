@@ -165,10 +165,14 @@ a{
 }
 
 .message{
-    text-align: center;
-    transition: opacity 0.5s ease-in-out;
+    display: block;
 }
 
+.hidden {
+    transition: opacity 3s ease-in-out;
+    opacity: 0;
+    overflow: hidden;
+}
 
 @media (max-width: 700px) {
     nav {

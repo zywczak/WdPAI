@@ -13,6 +13,8 @@
         <link rel="stylesheet" type="text/css" href="../../public/css/style100.css">
     <?php endif; ?>
     <script src="../../public/js/script1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="../../public/js/addToCart.js"></script>
     <title>Chłodzenie CPU</title>
 </head>
 
@@ -71,7 +73,7 @@
     <?php foreach ($coolers as $cooler): ?>
         <div class="cooler-container">
             <h3><?= $cooler->getManufacture();?> <?= $cooler->getModel(); ?></h3>
-            <img src="../../public/img/<?= $cooler->getPhoto(); ?>?t=<?= time(); ?>" alt="Image preview">
+            <img src="../../public/img/<?= $cooler->getPhoto() ? $cooler->getPhoto() : 'brakfoto.png'; ?>" alt="Image preview">
             <br>
             <span>Rodzaj: <?= $cooler->getType(); ?></span>
             <span>Liczba wentylatorów: <?= $cooler->getFanCount(); ?></span>
@@ -81,7 +83,9 @@
             <span>Rozmiar radiatora: <?= $cooler->getRadiatorSize(); ?> mm</span>
             <span>Kompatybilność: <?= $cooler->getCompatibility(); ?></span>
             <span class="price"><?= $cooler->getPrice(); ?> zł</span>
-            <img src="../../public/img/do_koszyka.png" alt="do koszyka">
+            <a class="addToCart" data-product-id=<?= $cooler->getId(); ?>>
+                <img src="../../public/img/do_koszyka.png" alt="do koszyka">
+            </a>
         </div>
     <?php endforeach; ?>
 </main>

@@ -37,28 +37,58 @@ class CpuRepository extends ProductRepository
         );
     }
 
-    public function addCpu(CPU $cpu)
-    {
+
+    public function addCpu(Cpu $cpu)
+{
+    $this->database->beginTransaction();
+
+    try {
+        // Wstawienie do tabeli 'products'
         parent::addProduct($cpu);
 
-        $productId = $this->database->lastInsertId();
+        // Pobranie instancji PDO z klasy Database
+        $pdo = $this->database->connect();
 
-        $stmt = $this->database->connect()->prepare('
-            INSERT INTO cpu_details (product_id, speed, architecture, supported_memory, cooling, threads, technological_process, power_consumption)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ');
+        // Pobranie ostatnio dodanego ID produktu
+        $stmt = $pdo->prepare('SELECT id FROM products ORDER BY id DESC LIMIT 1');
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $stmt->execute([
-            $productId,
-            $cpu->getSpeed(),
-            $cpu->getArchitecture(),
-            $cpu->getSupportedMemory(),
-            $cpu->getCooling(),
-            $cpu->getThreads(),
-            $cpu->getTechnologicalProcess(),
-            $cpu->getPowerConsumption()
-        ]);
+        if ($result) {
+            $productId = $result['id'];
+
+            // Insert into 'cpu_cooling_details' table
+            $stmt = $this->database->prepare('
+                INSERT INTO cpu_details (product_id, speed, architecture, supported_memory, cooling, threads, technological_process, power_consumption)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ');
+
+            $stmt->execute([
+                $productId,
+                $cpu->getSpeed(),
+                $cpu->getArchitecture(),
+                $cpu->getSupportedMemory(),
+                $cpu->getCooling(),
+                $cpu->getThreads(),
+                $cpu->getTechnologicalProcess(),
+                $cpu->getPowerConsumption()
+            ]);
+
+            // Commit the transaction
+            $this->database->commit();
+        } else {
+            // Coś poszło nie tak, wycofaj transakcję
+            $this->database->rollBack();
+            throw new Exception("Nie udało się uzyskać ostatnio dodanego ID produktu.");
+        }
+        $pdo = null;
+    } catch (\Exception $e) {
+        // Wycofanie transakcji w przypadku wystąpienia wyjątku
+        $this->database->rollBack();
+        // Obsługa wyjątku (np. logowanie lub rzucenie go dalej)
+        throw $e;
     }
+}
 
     public function getAllCpus(): array
     {
@@ -73,7 +103,7 @@ class CpuRepository extends ProductRepository
 
         while ($cpuData = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $cpuList[] = new CPU(
-                $cpuData['id'],
+                $cpuData['product_id'],
                 $cpuData['manufacturer'],
                 $cpuData['model'],
                 $cpuData['price'],
@@ -89,5 +119,26 @@ class CpuRepository extends ProductRepository
         }
 
         return $cpuList;
+    }
+
+    public function deleteCpu(int $cpuId): bool
+    {
+        $this->database->beginTransaction();
+
+        try {
+            // Usuń powiązane rekordy z cpu_details
+            $stmtCpu = $this->database->prepare('DELETE FROM cpu_details WHERE product_id = :cpuId');
+            $stmtCpu->bindParam(':cpuId', $cpuId, PDO::PARAM_INT);
+            $stmtCpu->execute();
+
+            // Następnie usuń rekord z products
+            $this->deleteProduct($cpuId);
+
+            $this->database->commit();
+            return true;
+        } catch (PDOException $e) {
+            $this->database->rollBack();
+            throw $e;
+        }
     }
 }

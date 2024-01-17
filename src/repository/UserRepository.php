@@ -5,7 +5,7 @@ require_once __DIR__.'/../models/User.php';
 
 class UserRepository extends Repository
 {
-    public function isEmailUnique(string $email): bool
+    public function isEmailUnique($email)
     {
         $stmt = $this->database->connect()->prepare('SELECT COUNT(*) FROM users WHERE email = :email');
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -14,7 +14,7 @@ class UserRepository extends Repository
         return $stmt->fetchColumn() == 0;
     }
 
-    public function isLoginUnique(string $login): bool
+    public function isLoginUnique($login)
     {
         $stmt = $this->database->connect()->prepare('SELECT COUNT(*) FROM users WHERE login = :login');
         $stmt->bindParam(':login', $login, PDO::PARAM_STR);
@@ -23,16 +23,18 @@ class UserRepository extends Repository
         return $stmt->fetchColumn() == 0;
     }
 
-    public function isEmailValid(string $email): bool
+    public function isEmailValid($email)
     {
         return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
-    public function getUser(string $email): ?User
+    public function getUser($email)
     {
-        $stmt = $this->database->connect()->prepare('SELECT * FROM users WHERE email = :email');
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
+        $stmt = $this->database->connect()->prepare('SELECT * FROM users WHERE email = ?');
+
+        $stmt->execute([
+            $email
+        ]);
 
         $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -67,18 +69,18 @@ class UserRepository extends Repository
 
         $stmt = $this->database->connect()->prepare('
             INSERT INTO users (id, name, surname, email, login, password, type)
-            VALUES (DEFAULT, :name, :surname, :email, :login, :password, :type)
+            VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)
         ');
 
-        $stmt->bindParam(':name', $user->getName(), PDO::PARAM_STR);
-        $stmt->bindParam(':surname', $user->getSurname(), PDO::PARAM_STR);
-        $stmt->bindParam(':email', $user->getEmail(), PDO::PARAM_STR);
-        $stmt->bindParam(':login', $user->getLogin(), PDO::PARAM_STR);
-        $stmt->bindParam(':password', $user->getPassword(), PDO::PARAM_STR);
-        $stmt->bindParam(':type', $user->getType(), PDO::PARAM_STR);
-
-        if (!$stmt->execute()) {
-            throw new Exception('Error adding user.');
+        if(!$stmt->execute([
+            $user->getName(),
+            $user->getSurname(),
+            $user->getEmail(),
+            $user->getLogin(),
+            $user->getPassword(),
+            $user->getType()
+        ])){
+            throw new Exception('Error adding user');
         }
     }
 }

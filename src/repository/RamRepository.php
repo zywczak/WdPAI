@@ -3,69 +3,54 @@
 require_once 'ProductRepository.php';
 require_once __DIR__.'/../models/RAM.php';
 
-class RamRepository extends ProductRepository
-{
-    public function getRam(int $productId): ?RAM
-    {
-        $stmt = $this->database->connect()->prepare('
-            SELECT p.*, r.*
-            FROM products p
-            JOIN ram_details r ON p.id = r.product_id
-            WHERE p.id = :id
-        ');
-        $stmt->bindParam(':id', $productId, PDO::PARAM_INT);
-        $stmt->execute();
+class RamRepository extends ProductRepository{
+    
+    public function addRam(Ram $ram){
+        $this->database->beginTransaction();
 
-        $ramData = $stmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            parent::addProduct($ram);
 
-        if ($ramData === false) {
-            return null;
+            $pdo = $this->database->connect();
+
+            $stmt = $pdo->prepare('SELECT id FROM products ORDER BY id DESC LIMIT 1');
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result) {
+                $productId = $result['id'];
+
+                $stmt = $this->database->connect()->prepare('
+                    INSERT INTO ram_details (product_id, speed, capacity, voltage, module_count, backlight, cooling)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                ');
+
+                $stmt->execute([
+                    $productId,
+                    $ram->getSpeed(),
+                    $ram->getCapacity(),
+                    $ram->getVoltage(),
+                    $ram->getModuleCount(),
+                    $ram->getBacklight(),
+                    $ram->getCooling()
+                ]);
+            
+                $this->database->commit();
+            } else {
+                $this->database->rollBack();
+                throw new Exception("Nie udało się uzyskać ostatnio dodanego ID produktu.");
+            }
+        } catch (Exception $e) {
+            $this->database->rollBack();
+            throw $e;
         }
-
-        return new RAM(
-            $ramData['id'],
-            $ramData['manufacturer'],
-            $ramData['model'],
-            $ramData['price'],
-            $ramData['photo'],  // Include 'photo' property
-            $ramData['category_id'],
-            $ramData['speed'],
-            $ramData['capacity'],
-            $ramData['voltage'],
-            $ramData['module_count'],
-            $ramData['backlight'],
-            $ramData['cooling']
-        );
     }
 
-    public function addRam(RAM $ram)
-    {
-        parent::addProduct($ram);
-
-        $productId = $this->database->lastInsertId();
-
+    public function getAllRams(){
         $stmt = $this->database->connect()->prepare('
-            INSERT INTO ram_details (product_id, speed, capacity, voltage, module_count, backlight, cooling)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        ');
-
-        $stmt->execute([
-            $productId,
-            $ram->getSpeed(),
-            $ram->getCapacity(),
-            $ram->getVoltage(),
-            $ram->getModuleCount(),
-            $ram->getBacklight(),
-            $ram->getCooling()
-        ]);
-    }
-
-    public function getAllRams(): array
-    {
-        $stmt = $this->database->connect()->prepare('
-            SELECT p.*, r.*
-            FROM products p
-            JOIN ram_details r ON p.id = r.product_id
+            SELECT products.*, ram_details.*
+            FROM products
+            JOIN ram_details ON products.id = ram_details.product_id
         ');
         $stmt->execute();
 
@@ -73,11 +58,11 @@ class RamRepository extends ProductRepository
 
         while ($ramData = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $ramList[] = new RAM(
-                $ramData['id'],
+                $ramData['product_id'],
                 $ramData['manufacturer'],
                 $ramData['model'],
                 $ramData['price'],
-                $ramData['photo'],  // Include 'photo' property
+                $ramData['photo'],
                 $ramData['speed'],
                 $ramData['capacity'],
                 $ramData['voltage'],
@@ -88,5 +73,25 @@ class RamRepository extends ProductRepository
         }
 
         return $ramList;
+    }
+
+    public function deleteRam($ramId){
+
+        $this->database->beginTransaction();
+
+        try {
+            $stmt = $this->database->prepare('DELETE FROM ram_details WHERE product_id = ?');
+            $stmt->execute([
+                $ramId,
+            ]);
+
+            $this->deleteProduct($ramId);
+
+            $this->database->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->database->rollBack();
+            throw $e;
+        }
     }
 }

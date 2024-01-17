@@ -8,12 +8,13 @@
     <meta name="keywords" content="strona, wspaniała, niczym">
     <meta name="author" content="Piotr Żywczak">
     <link rel="icon" type="image/x-icon" href="../../public/img/logo.png">
-    <link rel="stylesheet" type="text/css" href="../../public/css/style80.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/style90.css">
     <link rel="stylesheet" type="text/css" href="../../public/css/style40.css">
     <?php if ($_SESSION['user_type'] != 'admin') : ?>
         <link rel="stylesheet" type="text/css" href="../../public/css/style100.css">
     <?php endif; ?>
     <script src="../../public/js/script1.js"></script>
+    <script src="../../public/js/hideMessage.js"></script>
     <title>Koszyk</title>
 </head>
 
@@ -70,6 +71,14 @@
 
 
     <main>
+    <?php
+        if (isset($messages)) {
+            foreach ($messages as $message) {
+                // Dodaj klasę message do każdego komunikatu
+                echo '<div class="message">' . $message . '</div>';
+            }
+        }
+        ?>
         <h1>Koszyk</h1>
 
         <?php if (!empty($cartItems)) : ?>
@@ -79,9 +88,9 @@
                         <th>Producent</th>
                         <th>Model</th>
                         <th>Zdjęcie</th>
-                        <th>Cena</th>
                         <th>Ilość</th>
-                        <th>Akcje</th>
+                        <th>Cena</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -89,11 +98,11 @@
                         <tr>
                             <td><?= $item->getManufacture() ?></td>
                             <td><?= $item->getModel() ?></td>
-                            <td><img src="../../public/img/<?= $item->getPhoto() ?>" alt="<?= $item->getPhoto() ?>"></td>
+                            <td><img src="../../public/img/<?= $item->getPhoto() ? $item->getPhoto() : 'brakfoto.png'; ?>" alt="foto niedostepne"></td>
                             <td><?= $item->getQuantity() ?></td>
                             <td><?= $item->getPrice() ?> zł</td>
                             <td>
-                                <a href="remove?<?= $item->getId() ?>"><img src="../../public/img/remove.png" alt="remove"></a>
+                                <a href="remove?product_id=<?= $item->getId() ?>"><img src="../../public/img/remove.png" alt="remove"></a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -105,10 +114,10 @@
                 </tbody>
             </table>
             <div>
-                <form action="clear" method="post">
+                <form action="clearCart" method="post">
                     <button type="submit">Clear</button>
                 </form>
-                <form action="clear" method="post">
+                <form action="" method="post">
                     <button type="submit">Zamów</button>
                 </form>
             </div>

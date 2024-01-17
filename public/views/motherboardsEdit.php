@@ -71,6 +71,13 @@
     </nav>
 
 <main>
+<?php
+                       if(isset($messages)){
+                           foreach ($messages as $message) {
+                               echo $message;
+                           }
+                       }
+                       ?>
 <div>
             <img id="addButton" src="../../public/img/dodaj.png" alt="dodaj">
         </div>
@@ -81,10 +88,10 @@
                     <!-- Dodaj pola formularza dla nowego chłodzenia CPU -->
                     <!-- Pamiętaj, aby odpowiednio dostosować pola do Twoich potrzeb -->
                     <label for="manufacture">Producent:</label>
-                    <input type="text" id="manufacture" name="manufacture">
+                    <input type="text" id="manufacture" name="manufacture" required>
 
                     <label for="model">Model:</label>
-                    <input type="text" id="model" name="model">
+                    <input type="text" id="model" name="model" required>
                     <!-- Podgląd zdjęcia -->
                     <img class="preview" src="../../public/img/default-preview-image.png" alt="Image preview">
                     <br>
@@ -95,34 +102,34 @@
 
                     <!-- Dodane pole do zmiany ceny -->
                     <label for="price">Cena:</label>
-                    <input type="number" id="price" name="price">
+                    <input type="number" id="price" name="price" required>
 
                     <label for="chipset">Chipset:</label>
-                    <input type="text" name="chipset" >
+                    <input type="text" name="chipset" required>
 
                     <label for="form_factor">Format:</label>
-                    <input type="text" name="form_factor">
+                    <input type="text" name="form_factor" required>
 
                     <label for="supported_memory">Obsługiwana pamięć:</label>
-                    <input type="text" name="supported_memory" >
+                    <input type="text" name="supported_memory" required>
 
                     <label for="socket">Gniazdo procesora:</label>
-                    <input type="text" name="socket" >
+                    <input type="text" name="socket" required>
 
                     <label for="cpu_architecture">Architektura procesora:</label>
-                    <input type="text" name="cpu_architecture" >
+                    <input type="text" name="cpu_architecture" required>
 
                     <label for="internal_connectors">Wewnętrzne złącza:</label>
-                    <input type="text" name="internal_connectors" >
+                    <input type="text" name="internal_connectors" required>
 
                     <label for="external_connectors">Zewnętrzne złącza:</label>
-                    <input type="text" name="external_connectors" >
+                    <input type="text" name="external_connectors" required>
 
                     <label for="memory_slots">Liczba banków pamięci:</label>
-                    <input type="text" name="memory_slots" >
+                    <input type="number" name="memory_slots" required>
 
                     <label for="audio_system">Układ audio:</label>
-                    <input type="text" name="audio_system" >
+                    <input type="text" name="audio_system" required>
 
                     <button type="submit">Dodaj</button>
                 </div>
@@ -130,9 +137,10 @@
         </div>
     <div>
         <?php foreach ($motherboards as $motherboard): ?>
-            <form action="editMotherboard" method="post" class="form" enctype="multipart/form-data">
+            <form action="updateMotherboard" method="post" class="form" enctype="multipart/form-data">
                 <div class="container">
                     <h3><?= $motherboard->getManufacture();?> <?= $motherboard->getModel(); ?></h3>
+                    <input type="number" id="id" name="id" hidden value="<?= $motherboard->getId(); ?>">
                     <br>
                     <label for="manufacture">Producent:</label>
                     <input type="text" name="manufacture" value="<?= $motherboard->getManufacture(); ?>">
@@ -140,7 +148,7 @@
                     <label for="model">Model:</label>
                     <input type="text" name="model" value="<?= $motherboard->getModel(); ?>">
                     <!-- Podgląd zdjęcia -->
-                    <img class="preview" src="../../public/img/<?= $motherboard->getPhoto(); ?>?t=<?= time(); ?>" alt="Image preview">
+                    <img class="preview" src="../../public/img/<?= $motherboard->getPhoto() ? $motherboard->getPhoto() : 'brakfoto.png'; ?>" alt="Image preview">
                     <br>
 
                     <!-- Dodane pole do zmiany zdjęcia -->
@@ -179,7 +187,7 @@
                     <input type="text" name="audio_system" value="<?= $motherboard->getAudioSystem(); ?>">
 
                     <button type="submit">Edytuj</button>
-                    <a href="deleteMotherboard?id=<?= $motherboard->getId(); ?>"><button type="submit">Usuń</button></a>
+                    <a href="deleteMotherboard?id=<?= $motherboard->getId(); ?>"><button type="button">Usuń</button></a>
                 </div>
             </form>
         <?php endforeach; ?>

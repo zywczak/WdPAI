@@ -13,6 +13,8 @@
         <link rel="stylesheet" type="text/css" href="../../public/css/style100.css">
     <?php endif; ?>
     <script src="../../public/js/script1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="../../public/js/addToCart.js"></script>
     <title>CPU</title>
 </head>
 
@@ -70,7 +72,7 @@
             <?php foreach ($cpus as $cpu): ?>
                 <div class="cpu-container">
                     <h3><?= $cpu->getManufacture();?> <?= $cpu->getModel(); ?></h3>
-                    <img src="../../public/img/<?= $cpu->getPhoto(); ?>" alt="Image not available">
+                    <img src="../../public/img/<?= $cpu->getPhoto() ? $cpu->getPhoto() : 'brakfoto.png'; ?>" alt="Image not available">
                     <br>
                     <span>Taktowanie: <?= $cpu->getSpeed(); ?> GHz</span>
                     <span>Architektura: <?= $cpu->getArchitecture(); ?></span>
@@ -80,7 +82,9 @@
                     <span>Litografia: <?= $cpu->getTechnologicalProcess(); ?> nm</span>
                     <span>Pobór mocy: <?= $cpu->getPowerConsumption(); ?> W</span>
                     <span class="price"><?= $cpu->getPrice(); ?> zł</span>
-                    <img src="../../public/img/do_koszyka.png" alt="do koszyka">
+                    <a class="addToCart" data-product-id=<?= $cpu->getId(); ?>>
+                <img src="../../public/img/do_koszyka.png" alt="do koszyka">
+            </a>
                 </div>
             <?php endforeach; ?>
         </main>

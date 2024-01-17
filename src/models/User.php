@@ -1,7 +1,6 @@
 <?php
 
-class User
-{
+class User{
     private $id;
     private $email;
     private $password;
@@ -10,8 +9,7 @@ class User
     private $login;
     private $type;
 
-    public function __construct($id, $email, $password, $name, $surname, $login, $type)
-    {
+    public function __construct($id, $email, $password, $name, $surname, $login, $type){
         $this->id = $id;
         $this->email = $email;
         $this->password = $password;
@@ -21,73 +19,59 @@ class User
         $this->type = $type;
     }
 
-    public function getId()
-    {
+    public function getId(){
         return $this->id;
     }
 
-    public function setId($id)
-    {
+    public function setId($id){
         $this->id = $id;
     }
 
-    public function getEmail()
-    {
+    public function getEmail(){
         return $this->email;
     }
 
-    public function setEmail($email)
-    {
+    public function setEmail($email){
         $this->email = $email;
     }
 
-    public function getPassword()
-    {
+    public function getPassword(){
         return $this->password;
     }
 
-    public function setPassword($password)
-    {
+    public function setPassword($password){
         $this->password = $password;
     }
 
-    public function getName()
-    {
+    public function getName(){
         return $this->name;
     }
 
-    public function setName($name)
-    {
+    public function setName($name){
         $this->name = $name;
     }
 
-    public function getSurname()
-    {
+    public function getSurname(){
         return $this->surname;
     }
 
-    public function setSurname($surname)
-    {
+    public function setSurname($surname){
         $this->surname = $surname;
     }
 
-    public function getLogin()
-    {
+    public function getLogin(){
         return $this->login;
     }
 
-    public function setLogin($login)
-    {
+    public function setLogin($login){
         $this->login = $login;
     }
 
-    public function getType()
-    {
+    public function getType(){
         return $this->type;
     }
 
-    public function setType($type)
-    {
+    public function setType($type){
         $this->type = $type;
     }
 }

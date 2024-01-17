@@ -13,6 +13,8 @@
         <link rel="stylesheet" type="text/css" href="../../public/css/style100.css">
     <?php endif; ?>
     <script src="../../public/js/script1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="../../public/js/addToCart.js"></script>
     <title>Koszyk</title>
 </head>
 
@@ -72,7 +74,7 @@
             <?php foreach ($rams as $ram): ?>
                 <div class="ram-container">
                     <h3><?= $ram->getManufacture();?> <?= $ram->getModel(); ?></h3>
-                    <img src="../../public/img/<?= $ram->getPhoto(); ?>" alt="Image not available">
+                    <img src="../../public/img/<?= $ram->getPhoto() ? $ram->getPhoto() : 'brakfoto.png'; ?>" alt="Image not available">
                     <br>
                     <span>Taktowanie: <?= $ram->getSpeed(); ?> MHz</span>
                     <span>Pojemność: <?= $ram->getCapacity(); ?></span>
@@ -81,7 +83,9 @@
                     <span>Podświetlenie: <?= $ram->getBacklight() == 1 ? "Tak" : "Brak"; ?></span>
                     <span>Radiator: <?= $ram->getCooling() == 1 ? "Tak" : "Brak"; ?></span>
                     <span class="price"><?= $ram->getPrice(); ?> zł</span>
-                    <img src="../../public/img/do_koszyka.png" alt="do koszyka">
+                    <a class="addToCart" data-product-id=<?= $ram->getId(); ?>>
+                <img src="../../public/img/do_koszyka.png" alt="do koszyka">
+            </a>
                 </div>
             <?php endforeach; ?>
         </main>

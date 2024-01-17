@@ -7,9 +7,6 @@ require_once __DIR__ . '/../repository/CoolerRepository.php';
 class CoolerController extends ProductController
 {
     private $coolerRepository;
-    const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
-    const SUPPORTED_TYPES = ['image/png', 'image/jpeg'];
-    const UPLOAD_DIRECTORY = '/../../public/img/';
 
     public function __construct()
     {
@@ -45,13 +42,13 @@ class CoolerController extends ProductController
             $material = $_POST['material'];
             $radiatorSize = $_POST['radiator_size'];
             $compatibility = $_POST['compatibility'];
-            error_log($backlight);
             // Validate form data
             $errors = $this->validateFormData($manufacture, $model, $price, $type, $fanCount, $fanSize, $material, $radiatorSize, $compatibility);
 
             if (!empty($errors)) {
                 // If there are validation errors, render the form again with error messages
-                return $this->render('coolersEdit', ['messages' => $errors]);
+                $coolers = $this->coolerRepository->getAllCoolers();
+                return $this->render('coolersEdit', ['coolers' => $coolers, 'messages' => $errors]);
             }
 
             // Validate and handle file upload
@@ -111,25 +108,6 @@ class CoolerController extends ProductController
         return $errors;
     }
 
-    private function handleFileUpload()
-    {
-        $file = $_FILES['photo'];
-
-        // Check if the file is an image (JPEG or PNG)
-        if (!in_array($file['type'], self::SUPPORTED_TYPES)) {
-            // Invalid file type, handle accordingly (show error message, redirect, etc.)
-            return null;
-        }
-
-        $uploadPath = __DIR__ . self::UPLOAD_DIRECTORY;
-        $photo = $file['name'];
-
-        // Save uploaded file to a folder
-        move_uploaded_file($file['tmp_name'], $uploadPath . $photo);
-
-        return $photo;
-    }
-
     public function coolersEdit()
     {
         // Check if user is logged in and is an admin
@@ -186,51 +164,48 @@ class CoolerController extends ProductController
     }
 }
 
-public function updateCooler()
-{
-    // Check if user is logged in
-    if (!isset($_SESSION['user_ID'])) {
-        // Redirect to the login page if not logged in
-        header('Location: /login'); // Adjust the path accordingly
-        exit();
-    }
-
-    if ($this->isPost()) {
-        // Handle Cooler update logic based on the form submission
-        $id = $_POST['id'];
-        $manufacture = $_POST['manufacture'];
-        $model = $_POST['model'];
-        $price = $_POST['price'];
-        $type = $_POST['type'];
-        $fanCount = $_POST['fan_count'];
-        $fanSize = $_POST['fan_size'];
-        $backlight = isset($_POST['backlight']) ? true : 0;
-        $material = $_POST['material'];
-        $radiatorSize = $_POST['radiator_size'];
-        $compatibility = $_POST['compatibility'];
-
-        // Validate form data
-        $errors = $this->validateFormData($manufacture, $model, $price, $type, $fanCount, $fanSize, $material, $radiatorSize, $compatibility);
-
-        if (!empty($errors)) {
-            // If there are validation errors, render the form again with error messages
-            return $this->render('coolersEdit', ['messages' => $errors]);
+public function updateCooler(){
+        // Check if user is logged in
+        if (!isset($_SESSION['user_ID'])) {
+            // Redirect to the login page if not logged in
+            header('Location: /login'); // Adjust the path accordingly
+            exit();
         }
 
-        // Validate and handle file upload
-        $photo = $this->handleFileUpload();
+        if ($this->isPost()) {
+            // Handle Cooler addition logic based on the form submission
+            $id = $_POST['id'];
+            $manufacture = $_POST['manufacture'];
+            $model = $_POST['model'];
+            $price = $_POST['price'];
+            $type = $_POST['type'];
+            $fanCount = $_POST['fan_count'];
+            $fanSize = $_POST['fan_size'];
+            $backlight = isset($_POST['backlight']) ? true : 0;
+            $material = $_POST['material'];
+            $radiatorSize = $_POST['radiator_size'];
+            $compatibility = $_POST['compatibility'];
+    
+            // Validate form data
+            $errors = $this->validateFormData($manufacture, $model, $price, $type, $fanCount, $fanSize, $material, $radiatorSize, $compatibility);
 
-        // Create a new Cooler instance
-        $cooler = new Cooler($id, $manufacture, $model, $price, $photo, $type, $fanCount, $fanSize, $backlight, $material, $radiatorSize, $compatibility);
+            if (!empty($errors)) {
+                // If there are validation errors, render the form again with error messages
+                $coolers = $this->coolerRepository->getAllCoolers();
+                return $this->render('coolersEdit', ['coolers' => $coolers, 'messages' => $errors]);
+            }
 
-        // Update the Cooler in the repository
-        $this->coolerRepository->updateCooler($cooler);
+            // Validate and handle file upload
+            $photo = $this->handleFileUpload();
+            
+            // Create a new Cooler instance
+            $cooler = new Cooler($id, $manufacture, $model, $price, $photo, $type, $fanCount, $fanSize, $backlight, $material, $radiatorSize, $compatibility);
 
-        $coolers = $this->coolerRepository->getAllCoolers();
-        return $this->render('coolersEdit', ['coolers' => $coolers, 'messages' => ['Cooler updated successfully']]);
+            // Update the Cooler to the repository
+            $this->coolerRepository->updateCooler($cooler);
+
+            $coolers = $this->coolerRepository->getAllCoolers();
+            return $this->render('coolersEdit', ['coolers' => $coolers, 'messages' => ['Cooler updated successfully']]);
+        }
     }
-}
-
-
-
 }

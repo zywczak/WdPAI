@@ -135,7 +135,7 @@
                 <form action="updateCooler" method="post" class="form" enctype="multipart/form-data">
                     <div class="container">
                         <h3><?= $cooler->getManufacture();?> <?= $cooler->getModel(); ?></h3>
-                        <input type="number" id="id" name="id" hidden disabled value="<?= $cooler->getId(); ?>">
+                        <input type="number" id="id" name="id" hidden value="<?= $cooler->getId(); ?>">
                         <br>
                         <label for="manufacture">Producent:</label>
                         <input type="text" id="manufacture" name="manufacture" value="<?= $cooler->getManufacture(); ?>">
@@ -143,7 +143,7 @@
                         <label for="model">Model:</label>
                         <input type="text" id="model" name="model" value="<?= $cooler->getModel(); ?>">
                         <!-- Podgląd zdjęcia -->
-                        <img class="preview" src="../../public/img/<?= $cooler->getPhoto(); ?>?t=<?= time(); ?>" alt="Image preview">
+                        <img class="preview" src="../../public/img/<?= $cooler->getPhoto() ? $cooler->getPhoto() : 'brakfoto.png'; ?>" alt="Image preview">
                         <br>
 
                         <!-- Dodane pole do zmiany zdjęcia -->

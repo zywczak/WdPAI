@@ -13,6 +13,8 @@
         <link rel="stylesheet" type="text/css" href="../../public/css/style100.css">
     <?php endif; ?>
     <script src="../../public/js/script1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="../../public/js/addToCart.js"></script>
     <title>Płyty główne</title>
 </head>
 
@@ -71,7 +73,7 @@
             <?php foreach ($motherboards as $motherboard): ?>
                 <div class="motherboard-container">
                     <h3><?= $motherboard->getManufacture();?> <?= $motherboard->getModel(); ?></h3>
-                    <img src="../../public/img/<?= $motherboard->getPhoto(); ?>" alt="Image not available">
+                    <img src="../../public/img/<?= $motherboard->getPhoto() ? $motherboard->getPhoto() : 'brakfoto.png'; ?>" alt="Image not available">
                     <br>
                     <span>Chipset: <?= $motherboard->getChipset(); ?></span>
                     <span>Format: <?= $motherboard->getFormFactor(); ?></span>
@@ -83,7 +85,9 @@
                     <span>Liczba banków pamięci: <?= $motherboard->getMemorySlots(); ?></span>
                     <span>Układ audio: <?= $motherboard->getAudioSystem(); ?></span>
                     <span class="price"><?= $motherboard->getPrice(); ?> zł</span>
-                    <img src="../../public/img/do_koszyka.png" alt="do koszyka">
+                    <a class="addToCart" data-product-id=<?= $motherboard->getId(); ?>>
+                <img src="../../public/img/do_koszyka.png" alt="do koszyka">
+            </a>
                 </div>
             <?php endforeach; ?>
         </main>

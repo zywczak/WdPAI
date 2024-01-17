@@ -8,14 +8,12 @@ class Database extends PDO {
     private $host;
     private $database;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->username = USERNAME;
         $this->password = PASSWORD;
         $this->host = HOST;
         $this->database = DATABASE;
 
-        // Call the parent constructor
         parent::__construct(
             "pgsql:host=$this->host;port=5432;dbname=$this->database",
             $this->username,
@@ -23,12 +21,10 @@ class Database extends PDO {
             ["sslmode" => "prefer"]
         );
 
-        // Set the PDO error mode to exception
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
-    public function connect()
-    {
+    public function connect(){
         try {
             $conn = new PDO(
                 "pgsql:host=$this->host;port=5432;dbname=$this->database",
@@ -37,7 +33,6 @@ class Database extends PDO {
                 ["sslmode"  => "prefer"]
             );
 
-            // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $conn;
         }

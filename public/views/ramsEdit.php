@@ -70,6 +70,13 @@
         </div>
     </nav>
     <main>
+    <?php
+                       if(isset($messages)){
+                           foreach ($messages as $message) {
+                               echo $message;
+                           }
+                       }
+                       ?>
     <div>
             <img id="addButton" src="../../public/img/dodaj.png" alt="dodaj">
         </div>
@@ -120,9 +127,10 @@
         </div>
     <div>
     <?php foreach ($rams as $ram): ?>
-        <form action="editRam" method="post" class="form" enctype="multipart/form-data">
+        <form action="updateRam" method="post" class="form" enctype="multipart/form-data">
             <div class="container">
                 <h3><?= $ram->getManufacture(); ?> <?= $ram->getModel(); ?></h3>
+                <input type="number" id="id" name="id" hidden value="<?= $ram->getId(); ?>">
                 <br>
                 <!-- Include RAM form fields based on your requirements -->
                 <!-- Example: -->
@@ -132,7 +140,7 @@
                 <label for="model">Model:</label>
                 <input type="text" name="model" value="<?= $ram->getModel(); ?>">
                 
-                <img class="preview" src="../../public/img/<?= $ram->getPhoto(); ?>?t=<?= time(); ?>" alt="Image preview">
+                <img class="preview" src="../../public/img/<?= $ram->getPhoto() ? $ram->getPhoto() : 'brakfoto.png'; ?>" alt="Image preview">
                 <br>
 
                 <!-- Dodane pole do zmiany zdjęcia -->
@@ -162,7 +170,7 @@
                 <input type="checkbox" name="cooling" <?= $ram->getCooling() ? 'checked' : ''; ?>>
 
                 <button type="submit">Edytuj</button>
-                <a href="deleteRam?id=<?= $ram->getId(); ?>"><button type="submit">Usuń</button></a>
+                <a href="deleteRam?id=<?= $ram->getId(); ?>"><button type="button">Usuń</button></a>
 
             </div>
         </form>

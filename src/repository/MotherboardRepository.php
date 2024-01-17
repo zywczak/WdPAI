@@ -42,12 +42,25 @@ class MotherboardRepository extends ProductRepository
     }
 
     public function addMotherboard(Motherboard $motherboard)
-    {
+{
+    $this->database->beginTransaction();
+
+    try {
+        // Wstawienie do tabeli 'products'
         parent::addProduct($motherboard);
 
-        $productId = $this->database->lastInsertId();
+        // Pobranie instancji PDO z klasy Database
+        $pdo = $this->database->connect();
 
-        $stmt = $this->database->connect()->prepare('
+        // Pobranie ostatnio dodanego ID produktu
+        $stmt = $pdo->prepare('SELECT id FROM products ORDER BY id DESC LIMIT 1');
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            $productId = $result['id'];
+
+            $stmt = $this->database->connect()->prepare('
             INSERT INTO motherboard_details (product_id, chipset, form_factor, supported_memory, socket, cpu_architecture, internal_connectors, external_connectors, memory_slots, audio_system)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ');
@@ -64,7 +77,22 @@ class MotherboardRepository extends ProductRepository
             $motherboard->getMemorySlots(),
             $motherboard->getAudioSystem()
         ]);
+
+            // Commit the transaction
+            $this->database->commit();
+        } else {
+            // Coś poszło nie tak, wycofaj transakcję
+            $this->database->rollBack();
+            throw new Exception("Nie udało się uzyskać ostatnio dodanego ID produktu.");
+        }
+        $pdo = null;
+    } catch (\Exception $e) {
+        // Wycofanie transakcji w przypadku wystąpienia wyjątku
+        $this->database->rollBack();
+        // Obsługa wyjątku (np. logowanie lub rzucenie go dalej)
+        throw $e;
     }
+}
 
     public function getAllMotherboards(): array
     {
@@ -79,7 +107,7 @@ class MotherboardRepository extends ProductRepository
 
         while ($motherboardData = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $motherboardList[] = new Motherboard(
-                $motherboardData['id'],
+                $motherboardData['product_id'],
                 $motherboardData['manufacturer'],
                 $motherboardData['model'],
                 $motherboardData['price'],
@@ -97,5 +125,26 @@ class MotherboardRepository extends ProductRepository
         }
 
         return $motherboardList;
+    }
+
+    public function deleteMotherboard(int $motherboardId): bool
+    {
+        $this->database->beginTransaction();
+
+        try {
+            // Usuń powiązane rekordy z motherboard_details
+            $stmtmotherboard = $this->database->prepare('DELETE FROM motherboard_details WHERE product_id = :motherboardId');
+            $stmtmotherboard->bindParam(':motherboardId', $motherboardId, PDO::PARAM_INT);
+            $stmtmotherboard->execute();
+
+            // Następnie usuń rekord z products
+            $this->deleteProduct($motherboardId);
+
+            $this->database->commit();
+            return true;
+        } catch (PDOException $e) {
+            $this->database->rollBack();
+            throw $e;
+        }
     }
 }

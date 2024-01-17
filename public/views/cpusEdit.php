@@ -70,6 +70,13 @@
 
 
 <main>
+<?php
+                       if(isset($messages)){
+                           foreach ($messages as $message) {
+                               echo $message;
+                           }
+                       }
+                       ?>
 <div>
             <img id="addButton" src="../../public/img/dodaj.png" alt="dodaj">
         </div>
@@ -80,10 +87,10 @@
                     <!-- Dodaj pola formularza dla nowego chłodzenia CPU -->
                     <!-- Pamiętaj, aby odpowiednio dostosować pola do Twoich potrzeb -->
                     <label for="manufacture">Producent:</label>
-                    <input type="text" id="manufacture" name="manufacture">
+                    <input type="text" id="manufacture" name="manufacture" required>
 
                     <label for="model">Model:</label>
-                    <input type="text" id="model" name="model">
+                    <input type="text" id="model" name="model" required>
                     <!-- Podgląd zdjęcia -->
                     <img class="preview" src="../../public/img/default-preview-image.png" alt="Image preview">
                     <br>
@@ -94,28 +101,28 @@
 
                     <!-- Dodane pole do zmiany ceny -->
                     <label for="price">Cena:</label>
-                    <input type="number" id="price" name="price">
+                    <input type="number" id="price" name="price" required>
 
                     <label for="speed">Taktowanie:</label>
-                <input type="number" name="speed">
+                <input type="number" name="speed" required>
                 
                 <label for="architecture">Architektura:</label>
-                <input type="text" name="architecture" >
+                <input type="text" name="architecture" required>
                 
                 <label for="supported_memory">Obsługiwana pamięć:</label>
-                <input type="text" name="supported_memory">
+                <input type="text" name="supported_memory" required>
                 
                 <label for="cooling">Chłodzenie:</label>
                 <input type="checkbox" name="cooling" >
                 
                 <label for="threads">Rdzenie:</label>
-                <input type="number" name="threads" >
+                <input type="number" name="threads" required>
                 
                 <label for="technological_process">Litografia:</label>
-                <input type="text" name="technological_process">
+                <input type="number" name="technological_process" required>
                 
                 <label for="power_consumption">Pobór mocy:</label>
-                <input type="number" name="power_consumption">
+                <input type="number" name="power_consumption" required>
 
                     <button type="submit">Dodaj</button>
                 </div>
@@ -124,9 +131,10 @@
     <div>
 
     <?php foreach ($cpus as $cpu): ?>
-        <form action="editCpu" method="post" class="form" enctype="multipart/form-data">
+        <form action="updateCpu" method="post" class="form" enctype="multipart/form-data">
             <div class="container">
                 <h3><?= $cpu->getManufacture();?> <?= $cpu->getModel(); ?></h3>
+                <input type="number" id="id" name="id" hidden value="<?= $cpu->getId(); ?>">
                 <br>
                 <label for="manufacture">Producent:</label>
                 <input type="text" name="manufacture" value="<?= $cpu->getManufacture(); ?>">
@@ -134,7 +142,7 @@
                 <label for="model">Model:</label>
                 <input type="text" name="model" value="<?= $cpu->getModel(); ?>">
                 <!-- Podgląd zdjęcia -->
-                <img class="preview" src="../../public/img/<?= $cpu->getPhoto(); ?>?t=<?= time(); ?>" alt="Image preview">
+                <img class="preview" src="../../public/img/<?= $cpu->getPhoto() ? $cpu->getPhoto() : 'brakfoto.png'; ?>" alt="Image preview">
                 <br>
 
                 <!-- Dodane pole do zmiany zdjęcia -->
@@ -167,7 +175,7 @@
                 <input type="number" name="power_consumption" value="<?= $cpu->getPowerConsumption(); ?>">
                 
                 <button type="submit">Edytuj</button>
-                <a href="deleteCpu?id=<?= $cpu->getId(); ?>"><button type="submit">Usuń</button></a>
+                <a href="deleteCpu?id=<?= $cpu->getId(); ?>"><button type="button">Usuń</button></a>
             </div>
         </form>
     <?php endforeach; ?>
