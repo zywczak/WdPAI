@@ -12,14 +12,14 @@ header {
     background: linear-gradient(95deg, #0094FF 0%, #003E6A 67.29%);
     text-align: center;
     padding: 20px 0;
-    display: flex; /* Ustawienie nagłówka jako flex container */
-    justify-content: space-between; /* Rozmieszczenie elementów w przeciwnych kierunkach */
+    display: flex;
+    justify-content: space-between; 
     align-items: center;
 }
 
 header > div {
     display: flex;
-    align-items: center; /* Wyśrodkowanie elementów w pionie */
+    align-items: center; 
 }
 
 header > div > a {
@@ -27,19 +27,19 @@ header > div > a {
 }
 
 header > div:first-child > img {
-    width: 100%; /* Dostosowane szerokości obrazów */
-    max-width: 150px; /* Dodane ograniczenie maksymalnej szerokości */
+    width: 100%; 
+    max-width: 150px; 
 }
 
 header > div:nth-child(2) > img {
-    width: 30px; /* Dostosowana szerokość ikon */
-    height: 30px; /* Dostosowana wysokość ikon */
-    margin-right: 12px; /* Dodane odstępy między ikoną a tekstem */
+    width: 30px; 
+    height: 30px; 
+    margin-right: 12px; 
 }
 
 header > div:nth-child(2) > a > img {
-    width: 30px; /* Dostosowana szerokość ikon */
-    height: 30px; /* Dostosowana wysokość ikon */
+    width: 30px;
+    height: 30px; 
     padding: 10px;
 }
 
@@ -51,12 +51,12 @@ header > div:nth-child(2) > a > img[alt='login'] {
 header > div > span {
     color: white;
     font-weight: bold;
-    font-size: 16px; /* Dostosowany rozmiar czcionki */
+    font-size: 16px; 
 }
 
 .cart {
-    width: 30%; /* Dostosowane szerokości obrazów */
-    max-width: 150px; /* Dodane ograniczenie maksymalnej szerokości */
+    width: 30%; 
+    max-width: 150px; 
     cursor: pointer;
 }
 
@@ -109,9 +109,9 @@ main {
 }
 
 main > img {
-    width: 100%; /* Zmieniłem wartość na 100% szerokości okna przeglądarki */
-    max-width: 600px; /* Dodane ograniczenie maksymalnej szerokości */
-    margin: 0 auto; /* Dodane, aby obraz był wyśrodkowany */
+    width: 100%;
+    max-width: 600px; 
+    margin: 0 auto; 
 }
 
 main {
@@ -122,27 +122,27 @@ main {
 }
 
 .cooler-container, .cpu-container, .motherboard-container, .ram-container {
-    width: 30%; /* Ustawiona szerokość diva */
-    border: 1px solid #ccc; /* Obramowanie na szaro */
-    margin: 20px; /* Odstęp między divami */
+    width: 30%; 
+    border: 1px solid #ccc; 
+    margin: 20px; 
     padding: 10px;
     box-sizing: border-box;
     min-width: 350px;
 }
 
 .cooler-container > img, .cpu-container > img, .motherboard-container > img, .ram-container > img {
-    width: 100%; /* Ustawienie, aby obrazy były responsywne */
+    width: 100%;
     height: auto;
-    margin-bottom: 10px; /* Odstęp między obrazem a tekstem */
+    margin-bottom: 10px;
 }
 
 .to-cart {
-    width: 30px; /* Ustawiona szerokość drugiego obrazu */
+    width: 30px;
 }
 
 .cooler-container span, .cpu-container span, .motherboard-container span, .ram-container span {
     display: block;
-    margin-bottom: 5px; /* Odstęp między poszczególnymi spanami */
+    margin-bottom: 5px;
 }
 
 .price {
@@ -173,6 +173,7 @@ a{
     opacity: 0;
     overflow: hidden;
 }
+
 
 @media (max-width: 700px) {
     nav {

@@ -41,8 +41,22 @@ CREATE TABLE products (
     price double precision not null,
     category_id int not null,
     photo varchar(50) not null,
+    add_time timestamp not null,
     foreign key (category_id) references categories(id)
 );
+
+CREATE OR REPLACE FUNCTION add_product_time()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.add_time = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER add_product_time_trigger
+BEFORE INSERT ON products
+FOR EACH ROW
+EXECUTE FUNCTION add_product_time();
 
 CREATE TABLE ram_details (
     id serial primary key,
@@ -88,7 +102,7 @@ CREATE TABLE motherboard_details (
     form_factor varchar(10) not null,
     supported_memory varchar(100) not null,
     socket varchar(10) not null,
-    cpu_architecture varchar(30) not null,
+    cpu_architecture varchar(100) not null,
     internal_connectors text not null,
     external_connectors text not null,
     memory_slots int not null,
@@ -97,6 +111,10 @@ CREATE TABLE motherboard_details (
     foreign key (product_id) references products(id)
 );
 
+CREATE VIEW coolers_view AS( SELECT c.product_id, p.manufacturer, p.model, p.price, p. photo, c.type, c.fan_count, c.fan_size, c.backlight, c.material, c.radiator_size, c.compatibility
+            FROM products p
+            JOIN cpu_cooling_details c ON p.id = c.product_id);
+    
 CREATE TABLE order_details (
     id serial primary key,
     order_id int not null,
@@ -115,7 +133,10 @@ CREATE TABLE basket (
     foreign key (product_id) references products(id)
 );
 
-INSERT INTO users(name, surname, email, login, password) VALUES
+CREATE VIEW cart_view AS ( SELECT b.user_id, p.id, p.manufacturer, p.model, p.price, p. photo, b.quantity FROM basket b
+            JOIN products p ON b.product_id = p.id JOIN users u ON b.user_id = u.id);
+
+INSERT INTO users(name, surname, email, login, password, type) VALUES
 ('Piotr', 'Żywczak', 'piotrzywczak33@gmail.com', 'zywczak', '$2y$10$UrmxfLOwjd9vGfMnkE5xFOMnYKTwgeehHHIqcNJt5hkkl0bpZwFQC', 'admin'),
 ('Piotr', 'Żywczak', 'piotrzywczak@interia.pl', 'zywczok', '$2y$10$UrmxfLOwjd9vGfMnkE5xFOMnYKTwgeehHHIqcNJt5hkkl0bpZwFQC', 'user');
 

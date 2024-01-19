@@ -3,9 +3,7 @@
 require_once 'AppController.php';
 
 class DefaultController extends AppController {
-
-    public function index()
-    {
+    public function index(){
         $this->render('main');
     }
 }

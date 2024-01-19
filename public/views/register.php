@@ -4,11 +4,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Ta struna to bydzie ło niczym">
-        <meta name="keywords" content="strona, ło, niczem">
-        <meta name="author" content="Piotr Żywczak">
         <link rel="icon" type="image/x-icon" href="../../public/img/logo.png">
-        <link rel="stylesheet" type="text/css" href="../../public/css/style10.css">
+        <link rel="stylesheet" type="text/css" href="../../public/css/style.css">
         <title>Rejestracja</title>
     </head>
     <body>
@@ -27,13 +24,13 @@
                     <input name="surname" type="text" placeholder="surname">
                     <span class="message">
                        <?php
-                       if(isset($messages)){
+                        if(isset($messages)){
                            foreach ($messages as $message) {
                                echo $message;
                            }
-                       }
+                        }
                        ?>
-                    </span>
+                        </span>
                     <input type="submit" value="Zarejestruj">
                </form>
                <p>

@@ -3,33 +3,30 @@
 require_once 'Repository.php';
 require_once __DIR__.'/../models/User.php';
 
-class UserRepository extends Repository
-{
-    public function isEmailUnique($email)
-    {
-        $stmt = $this->database->connect()->prepare('SELECT COUNT(*) FROM users WHERE email = :email');
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
+class UserRepository extends Repository{
+    public function isEmailUnique($email){
+        $stmt = $this->database->connect()->prepare('SELECT COUNT(*) FROM users WHERE email = ?');
+        $stmt->execute([
+            $email
+        ]);
 
         return $stmt->fetchColumn() == 0;
     }
 
-    public function isLoginUnique($login)
-    {
-        $stmt = $this->database->connect()->prepare('SELECT COUNT(*) FROM users WHERE login = :login');
-        $stmt->bindParam(':login', $login, PDO::PARAM_STR);
-        $stmt->execute();
+    public function isLoginUnique($login){
+        $stmt = $this->database->connect()->prepare('SELECT COUNT(*) FROM users WHERE login = ?');
+        $stmt->execute([
+            $login
+        ]);
 
         return $stmt->fetchColumn() == 0;
     }
 
-    public function isEmailValid($email)
-    {
+    public function isEmailValid($email){
         return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
-    public function getUser($email)
-    {
+    public function getUser($email){
         $stmt = $this->database->connect()->prepare('SELECT * FROM users WHERE email = ?');
 
         $stmt->execute([
@@ -53,8 +50,7 @@ class UserRepository extends Repository
         );
     }
 
-    public function addUser(User $user)
-    {
+    public function addUser(User $user){
         if (!$this->isEmailUnique($user->getEmail())) {
             throw new Exception('Email is not unique.');
         }

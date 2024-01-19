@@ -3,15 +3,14 @@
 require_once 'Repository.php';
 require_once __DIR__.'/../models/Product.php';
 
-class ProductRepository extends Repository
-{
-    public function getProduct(int $id): ?Product
-    {
+class ProductRepository extends Repository{
+    public function getProduct(int $id){
         $stmt = $this->database->connect()->prepare('
-            SELECT * FROM products WHERE id = :id
+            SELECT * FROM products WHERE id = ?
         ');
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
+        $stmt->execute([
+            $id
+        ]);
 
         $productData = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -28,8 +27,7 @@ class ProductRepository extends Repository
         );
     }
 
-    public function addProduct(Product $product)
-    {
+    public function addProduct(Product $product){
         
         $stmt = $this->database->connect()->prepare('
             INSERT INTO products (manufacturer, model, price, photo, category_id)
@@ -40,14 +38,11 @@ class ProductRepository extends Repository
             $product->getManufacture(),
             $product->getModel(),
             $product->getPrice(),
-            $product->getPhoto(),  // Include 'photo' property
+            $product->getPhoto(),
         ]);
     }
 
-
-
-    public function getAllProducts()
-    {
+    public function getAllProducts(){
         $stmt = $this->database->connect()->prepare('
             SELECT * FROM products
         ');
@@ -61,7 +56,7 @@ class ProductRepository extends Repository
                 $productData['manufacturer'],
                 $productData['model'],
                 $productData['price'],
-                $productData['photo'],  // Now includes the 'photo' property
+                $productData['photo'],
                 $productData['category_id']
             );
         }
@@ -69,16 +64,15 @@ class ProductRepository extends Repository
         return $products;
     }
 
-    public function getUserCart(int $userId): array
-    {
+    public function getUserCart(int $userId){
         $stmt = $this->database->connect()->prepare('
-            SELECT p.*, b.quantity
-            FROM basket b
-            JOIN products p ON b.product_id = p.id
-            WHERE b.user_id = ?
+            SELECT * FROM cart_view
+            WHERE user_id = ?
         ');
 
-        $stmt->execute([$userId]);
+        $stmt->execute([
+            $userId
+        ]);
 
         $cartItems = [];
 
@@ -96,31 +90,29 @@ class ProductRepository extends Repository
         return $cartItems;
     }
 
-    public function deleteProduct(int $productId): bool
-    {
+    public function deleteProduct(int $productId){
         try {
-            $stmt = $this->database->prepare('DELETE FROM products WHERE id = :productId');
-            $stmt->bindParam(':productId', $productId, PDO::PARAM_INT);
-            $stmt->execute();
-
+            $stmt = $this->database->prepare('DELETE FROM products WHERE id = ?');
+            $stmt->execute([
+                $productId
+            ]);
+    
             return true;
         } catch (PDOException $e) {
-            // Obsługa błędów - możesz również zalogować błąd lub w inny sposób go obsłużyć
             error_log("Błąd usuwania produktu: " . $e->getMessage());
             return false;
         }
     }
 
-    public function clearCart(int $userId): bool
-    {
+    public function clearCart(int $userId){
         try {
-            $stmt = $this->database->prepare('DELETE FROM basket WHERE user_id = :userId');
-            $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
-            $stmt->execute();
-
+            $stmt = $this->database->prepare('DELETE FROM basket WHERE user_id = ?');
+            $stmt->execute([
+                $userId
+            ]);
+    
             return true;
         } catch (PDOException $e) {
-            // Obsługa błędów - możesz również zalogować błąd lub w inny sposób go obsłużyć
             error_log("Błąd czyszczenia koszyka: " . $e->getMessage());
             return false;
         }
@@ -128,86 +120,80 @@ class ProductRepository extends Repository
 
     public function remove(int $userId, int $productId){
         try {
-            $stmt = $this->database->prepare('DELETE FROM basket WHERE user_id = :userId and product_id = :productId');
-            $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
-            $stmt->bindParam(':productId', $productId, PDO::PARAM_INT);
-            $stmt->execute();
-
+            $stmt = $this->database->prepare('DELETE FROM basket WHERE user_id = ? and product_id = ?');
+            $stmt->execute([
+                $userId,
+                $productId
+            ]);
+    
             return true;
         } catch (PDOException $e) {
-            // Obsługa błędów - możesz również zalogować błąd lub w inny sposób go obsłużyć
             error_log("Błąd usuwania produktu z koszyka: " . $e->getMessage());
             return false;
         }
     }
 
-    public function addToCart(int $userId, int $productId)
-{
-    // Check if the product is already in the user's cart
-    $stmt = $this->database->connect()->prepare('
-        SELECT * FROM basket WHERE user_id = ? AND product_id = ?
-    ');
-
-    $stmt->execute([$userId, $productId]);
-    $existingCartItem = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($existingCartItem) {
-        // If the product is already in the cart, update the quantity
+    public function addToCart(int $userId, int $productId){
         $stmt = $this->database->connect()->prepare('
-            UPDATE basket SET quantity = quantity + 1 WHERE user_id = ? AND product_id = ?
+            SELECT * FROM basket WHERE user_id = ? AND product_id = ?
         ');
 
         $stmt->execute([$userId, $productId]);
-    } else {
-        // If the product is not in the cart, add it with quantity = 1
-        $stmt = $this->database->connect()->prepare('
-            INSERT INTO basket (user_id, product_id, quantity) VALUES (?, ?, 1)
-        ');
+        $existingCartItem = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $stmt->execute([$userId, $productId]);
+        if ($existingCartItem) {
+            $stmt = $this->database->connect()->prepare('
+                UPDATE basket SET quantity = quantity + 1 WHERE user_id = ? AND product_id = ?
+            ');
+
+            $stmt->execute([$userId, $productId]);
+        } else {
+            $stmt = $this->database->connect()->prepare('
+                INSERT INTO basket (user_id, product_id, quantity) VALUES (?, ?, 1)
+            ');
+
+            $stmt->execute([$userId, $productId]);
+        }
+
+        return true;
     }
 
-    return true;
-}
 
+    public function updateProduct(Product $product){
+        if ($product->getPhoto()){
+            $stmt = $this->database->connect()->prepare('
+                UPDATE products
+                SET
+                    manufacturer = ?,
+                    model = ?,
+                    price = ?,
+                    photo = ?
+                WHERE id = ?
+            ');
 
-    public function updateProduct(Product $product)
-{
-    if ($product->getPhoto()){
-        // Update product in the products table
-        $stmt = $this->database->connect()->prepare('
-            UPDATE products
-            SET
-                manufacturer = ?,
-                model = ?,
-                price = ?,
-                photo = ?
-            WHERE id = ?
-        ');
+            $stmt->execute([
+                $product->getManufacture(),
+                $product->getModel(),
+                $product->getPrice(),
+                $product->getPhoto(),
+                $product->getId()
+            ]);
+        }else{
+            $stmt = $this->database->connect()->prepare('
+                UPDATE products
+                SET
+                    manufacturer = ?,
+                    model = ?,
+                    price = ?
+                WHERE id = ?
+            ');
 
-        $stmt->execute([
-            $product->getManufacture(),
-            $product->getModel(),
-            $product->getPrice(),
-            $product->getPhoto(),  // Include 'photo' property
-            $product->getId()
-        ]);
-    }else{
-        $stmt = $this->database->connect()->prepare('
-            UPDATE products
-            SET
-                manufacturer = ?,
-                model = ?,
-                price = ?
-            WHERE id = ?
-        ');
-
-        $stmt->execute([
-            $product->getManufacture(),
-            $product->getModel(),
-            $product->getPrice(),
-            $product->getId()
-        ]);
-    }
-}    
+            $stmt->execute([
+                $product->getManufacture(),
+                $product->getModel(),
+                $product->getPrice(),
+                $product->getId()
+            ]);
+        }
+    }    
 }

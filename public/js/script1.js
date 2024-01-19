@@ -1,10 +1,7 @@
-
         document.addEventListener('DOMContentLoaded', function () {
-            // Pobierz wartość ze spana
             var userSpan = document.querySelector('header > div:nth-child(2) > span');
             var isUserLoggedIn = userSpan.innerHTML.trim() !== '';
 
-            // Jeśli użytkownik nie jest zalogowany
             if (!isUserLoggedIn) {
                 userSpan.style.display = 'none';
                 document.querySelector('header > div:nth-child(2) > a[href="logout"]').style.display = 'none';

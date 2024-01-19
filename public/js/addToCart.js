@@ -1,26 +1,30 @@
-// Przykład używając jQuery
-$(document).ready(function() {
-    $('.addToCart').on('click', function(e) {
-        e.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.addToCart').forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
 
-        // Pobierz id produktu z atrybutu data-product-id
-        var productId = $(this).data('product-id');
+            var productId = this.getAttribute('data-product-id');
 
-        // Wyślij żądanie AJAX do dodania produktu do koszyka
-        $.ajax({
-            type: 'POST',
-            url: '/addToCart',
-            data: { product_id: productId },
-            success: function(response) {
-                // Odpowiedź serwera w formie JSON
-                var result = JSON.parse(response);
-
-                alert(result.message);  // Możesz dostosować komunikat lub zastosować inne działania
-            },
-            error: function() {
-                // Obsługa błędów AJAX
-                alert('Failed to communicate with the server.');
-            }
+            fetch('/addToCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ product_id: productId }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Product successfully added to the cart: ' + data.message);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                alert('Failed to communicate with the server. Please try again later.');
+            });
         });
     });
 });

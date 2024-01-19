@@ -94,4 +94,41 @@ class RamRepository extends ProductRepository{
             throw $e;
         }
     }
+
+    public function updateRam(Ram $ram){
+        try {
+            $productUpdated = $this->updateProduct($ram);
+
+            if (!$productUpdated) {
+                return false;
+            }
+
+            $stmt = $this->database->connect()->prepare('
+                UPDATE cpu_cooling_details
+                SET
+                    speed = ?, 
+                    capacity = ?, 
+                    voltage = ?, 
+                    module_count = ?, 
+                    backlight = ?, 
+                    cooling = ?
+                WHERE product_id = ?
+            ');
+
+            $stmt->execute([
+                $ram->getId(),
+                $ram->getSpeed(),
+                $ram->getCapacity(),
+                $ram->getVoltage(),
+                $ram->getModuleCount(),
+                $ram->getBacklight(),
+                $ram->getCooling()
+            ]);
+
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            error_log("Error updating cooler: " . $e->getMessage());
+            return false;
+        }
+    }
 }

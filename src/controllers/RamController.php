@@ -1,36 +1,29 @@
 <?php
 
-require_once 'ProductController.php';  // Assuming ProductController is already defined
-require_once __DIR__ . '/../models/RAM.php';  // Assuming RAM model is already defined
+require_once 'ProductController.php';
+require_once __DIR__ . '/../models/RAM.php';
 require_once __DIR__ . '/../repository/RamRepository.php';
 
-class RamController extends ProductController
-{
+class RamController extends ProductController{
     private $ramRepository;
 
-    public function __construct()
-    {
+    public function __construct(){
         parent::__construct();
         $this->ramRepository = new RamRepository();
     }
 
-    public function rams()
-    {
+    public function rams(){
         $rams = $this->ramRepository->getAllRams();
         $this->render('rams', ['rams' => $rams]);
     }
 
-    public function addRam()
-    {
-        // Check if user is logged in
+    public function addRam(){
         if (!isset($_SESSION['user_ID'])) {
-            // Redirect to the login page if not logged in
-            header('Location: /login'); // Adjust the path accordingly
+            header('Location: /login');
             exit();
         }
 
         if ($this->isPost()) {
-            // Handle ram addition logic based on the form submission
             $id = null;
             $manufacture = $_POST['manufacture'];
             $model = $_POST['model'];
@@ -41,31 +34,28 @@ class RamController extends ProductController
             $moduleCount = $_POST['module_count'];
             $backlight = isset($_POST['backlight']) ? true : 0;
             $cooling = isset($_POST['cooling']) ? true : 0;
-            // Validate form data
+            
             $errors = $this->validateFormData($manufacture, $model, $price, $speed, $capacity, $voltage, $moduleCount, $backlight, $cooling);
 
             if (!empty($errors)) {
-                // If there are validation errors, render the form again with error messages
                 $rams = $this->ramRepository->getAllRams();
                 return $this->render('ramsEdit', ['rams' => $rams,  'messages' => $errors]);
             }
 
-            // Validate and handle file upload
             $photo = $this->handleFileUpload();
-
-            // Create a new RAM instance
             $ram = new Ram($id, $manufacture, $model, $price, $photo, $speed, $capacity, $voltage, $moduleCount, $backlight, $cooling);
 
-            // Add the RAM to the repository
-            $this->ramRepository->addRam($ram);
+            if(!$this->ramRepository->addRam($ram)){
+                $rams = $this->ramRepository->getAllRams();
+                return $this->render('ramsEdit', ['rams' => $rams, 'messages' => ['Ram added successfully']]);
+            }
 
             $rams = $this->ramRepository->getAllRams();
-            return $this->render('ramsEdit', ['rams' => $rams, 'messages' => ['Ram added successfully']]);
+            return $this->render('ramsEdit', ['rams' => $rams, 'messages' => ['Ram added failed']]);
         }
     }
 
-    private function validateFormData($manufacture, $model, $price, $speed, $capacity, $voltage, $moduleCount, $backlight, $cooling)
-    {
+    private function validateFormData($manufacture, $model, $price, $speed, $capacity, $voltage, $moduleCount, $backlight, $cooling){
         $errors = [];
 
         if (empty($manufacture)) {
@@ -99,73 +89,54 @@ class RamController extends ProductController
         return $errors;
     }
 
-    public function ramsEdit()
-{
-    // Check if user is logged in and is an admin
-    if ($_SESSION['user_type'] !== 'admin') {
-        // Redirect to the unauthorized page if not an admin
-        header('Location: /rams'); // Adjust the path accordingly
-        exit();
-    }
-
-    $rams = $this->ramRepository->getAllRams();
-    $this->render('ramsEdit', ['rams' => $rams]);
-}
-
-    public function deleteRam()
-{
-    // Check if user is logged in and is an admin
-    if ($_SESSION['user_type'] !== 'admin') {
-        // Redirect to the unauthorized page if not an admin
-        header('Location: /login'); // Adjust the path accordingly
-        exit();
-    }
-
-    if ($this->isGet()) {
-        // Get the ram ID from the query parameters
-        $ramId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-
-        // Validate the ID
-        if ($ramId === false || $ramId <= 0) {
-            // Invalid ID, handle accordingly (show error message, redirect, etc.)
-            // For now, redirect to the ramsEdit page with an error message
-            header('Location: /ramsEdit?messages=invalid_id');
+    public function ramsEdit(){
+        if ($_SESSION['user_type'] !== 'admin') {
+            header('Location: /rams');
             exit();
         }
 
-        try {
-            // Call the repository method to delete the ram
-            $success = $this->ramRepository->deleteRam($ramId);
+        $rams = $this->ramRepository->getAllRams();
+            $this->render('ramsEdit', ['rams' => $rams]);
+    }
 
-            if ($success) {
-                // Product deleted successfully, redirect to the ramsEdit page with a success message
-                $rams = $this->ramRepository->getAllRams();
-                return $this->render('ramsEdit', ['rams' => $rams, 'messages' => ['Ram deleted successfully']]);
-            } else {
-                // Product deletion failed, redirect to the ramsEdit page with an error message
-                $rams = $this->ramRepository->getAllRams();
-                return $this->render('ramsEdit', ['rams' => $rams, 'messages' => ['Failed to delete ram']]);
+    public function deleteRam(){
+        if ($_SESSION['user_type'] !== 'admin') {
+            header('Location: /login');
+            exit();
+        }
+
+        if ($this->isGet()) {
+            $ramId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+            if ($ramId === false || $ramId <= 0) {
+                header('Location: /ramsEdit?messages=invalid_id');
+                exit();
             }
-        } catch (PDOException $e) {
-            // Log the error or handle it appropriately
-            // For now, redirect to the ramsEdit page with an error message
-            $rams = $this->ramRepository->getAllRams();
-            return $this->render('ramsEdit', ['rams' => $rams, 'messages' => ['Error deleting ram']]);
+
+            try {
+                $success = $this->ramRepository->deleteRam($ramId);
+
+                if ($success) {
+                    $rams = $this->ramRepository->getAllRams();
+                    return $this->render('ramsEdit', ['rams' => $rams, 'messages' => ['Ram deleted successfully']]);
+                } else {
+                    $rams = $this->ramRepository->getAllRams();
+                    return $this->render('ramsEdit', ['rams' => $rams, 'messages' => ['Failed to delete ram']]);
+                }
+            } catch (PDOException $e) {
+                $rams = $this->ramRepository->getAllRams();
+                return $this->render('ramsEdit', ['rams' => $rams, 'messages' => ['Error deleting ram']]);
+            }
         }
     }
-}
 
-public function updateRam()
-    {
-        // Check if user is logged in
+    public function updateRam(){
         if (!isset($_SESSION['user_ID'])) {
-            // Redirect to the login page if not logged in
-            header('Location: /login'); // Adjust the path accordingly
+            header('Location: /login');
             exit();
         }
 
         if ($this->isPost()) {
-            // Handle ram addition logic based on the form submission
             $id = $_POST['id'];
             $manufacture = $_POST['manufacture'];
             $model = $_POST['model'];
@@ -176,25 +147,24 @@ public function updateRam()
             $moduleCount = $_POST['module_count'];
             $backlight = isset($_POST['backlight']) ? true : 0;
             $cooling = isset($_POST['cooling']) ? true : 0;
-            // Validate form data
+
             $errors = $this->validateFormData($manufacture, $model, $price, $speed, $capacity, $voltage, $moduleCount, $backlight, $cooling);
 
             if (!empty($errors)) {
-                // If there are validation errors, render the form again with error messages
                 return $this->render('ramsEdit', ['messages' => $errors]);
             }
 
-            // Validate and handle file upload
             $photo = $this->handleFileUpload();
 
-            // Create a new RAM instance
             $ram = new Ram($id, $manufacture, $model, $price, $photo, $speed, $capacity, $voltage, $moduleCount, $backlight, $cooling);
 
-            // Add the RAM to the repository
-            $this->ramRepository->updateRam($ram);
+            if(!$this->ramRepository->updateRam($ram)){
+                $rams = $this->ramRepository->getAllRams();
+                return $this->render('ramssEdit', ['rams' => $rams, 'messages' => ['Ram updated successfully']]);
+            }
 
             $rams = $this->ramRepository->getAllRams();
-            return $this->render('ramssEdit', ['rams' => $rams, 'messages' => ['Ram updated successfully']]);
+            return $this->render('ramssEdit', ['rams' => $rams, 'messages' => ['Ram updated failed']]);
         }
     }
 

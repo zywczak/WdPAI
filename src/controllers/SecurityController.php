@@ -4,18 +4,15 @@ require_once 'AppController.php';
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../repository/UserRepository.php';
 
-class SecurityController extends AppController
-{
+class SecurityController extends AppController{
     private $userRepository;
 
-    public function __construct()
-    {
+    public function __construct(){
         parent::__construct();
         $this->userRepository = new UserRepository();
     }
 
-    public function login()
-    {
+    public function login(){
         if (!$this->isPost()) {
             return $this->render('login');
         }
@@ -55,18 +52,14 @@ class SecurityController extends AppController
         header("Location: {$url}/");
     }
 
-    public function logout()
-    {
-        // Zakończenie sesji
+    public function logout(){
         session_unset();
         session_destroy();
         
-        // Przekierowanie na stronę logowania
-        header("Location: /login"); // Możesz dostosować ścieżkę do własnych potrzeb
+        header("Location: /login");
     }
 
-    public function register()
-    {
+    public function register(){
         if (!$this->isPost()) {
             return $this->render('register');
         }
@@ -92,14 +85,14 @@ class SecurityController extends AppController
             $messages[] = 'Niepoprawny format e-maila<br>';
         }
 
-    if (!empty($messages)) {
-        return $this->render('register', ['messages' => $messages]);
+        if (!empty($messages)) {
+            return $this->render('register', ['messages' => $messages]);
+        }
+
+        $user = new User($id, $email, password_hash($password, PASSWORD_BCRYPT), $name, $surname, $login, 'user');
+
+        $this->userRepository->addUser($user);
+
+        return $this->render('login', ['messages' => ['Rejestracja przebiegła pomyślnie']]);
     }
-
-    $user = new User($id, $email, password_hash($password, PASSWORD_BCRYPT), $name, $surname, $login, 'user');
-
-    $this->userRepository->addUser($user);
-
-    return $this->render('login', ['messages' => ['Rejestracja przebiegła pomyślnie']]);
-}
 }

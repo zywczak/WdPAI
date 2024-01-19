@@ -4,15 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Ta strona to będzie coś wspaniałego">
-    <meta name="keywords" content="strona, wspaniała, niczym">
-    <meta name="author" content="Piotr Żywczak">
     <link rel="icon" type="image/x-icon" href="../../public/img/logo.png">
-    <link rel="stylesheet" type="text/css" href="../../public/css/style140.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/style2.css">
     <?php if ($_SESSION['user_type'] != 'admin') : ?>
-        <link rel="stylesheet" type="text/css" href="../../public/css/style100.css">
+        <link rel="stylesheet" type="text/css" href="../../public/css/style3.css">
     <?php endif; ?>
     <script src="../../public/js/script1.js"></script>
+    <script src="../../public/js/hideMessage.js"></script>
     <title>Edycja chłodzeń CPU</title>
 
     <script src="../../public/js/viewImage.js"></script>
@@ -72,22 +70,18 @@
     </nav>
 
     <main>
-    <?php
-                       if(isset($messages)){
-                           foreach ($messages as $message) {
-                               echo $message;
-                           }
-                       }
-                       ?>
-        <div>
+        <?php
+            if (isset($messages)) {
+                foreach ($messages as $message) {
+                    echo '<span class="message">' . $message . '</span>';
+                }
+            }
+        ?>
             <img id="addButton" src="../../public/img/dodaj.png" alt="dodaj">
         </div>
         <div id="formContainer" style="display: none;">
-            <!-- Tutaj dodaj formularz do dodawania nowego chłodzenia CPU -->
             <form action="addCooler" method="post" class="form" enctype="multipart/form-data">
                 <div class="container">
-                    <!-- Dodaj pola formularza dla nowego chłodzenia CPU -->
-                    <!-- Pamiętaj, aby odpowiednio dostosować pola do Twoich potrzeb -->
                     <label for="manufacture">Producent:</label>
                     <input type="text" id="manufacture" name="manufacture" required>
 

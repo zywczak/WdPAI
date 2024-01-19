@@ -8,11 +8,12 @@
     <meta name="keywords" content="strona, wspaniała, niczym">
     <meta name="author" content="Piotr Żywczak">
     <link rel="icon" type="image/x-icon" href="../../public/img/logo.png">
-    <link rel="stylesheet" type="text/css" href="../../public/css/style140.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/style2.css">
     <?php if ($_SESSION['user_type'] != 'admin') : ?>
-        <link rel="stylesheet" type="text/css" href="../../public/css/style100.css">
+        <link rel="stylesheet" type="text/css" href="../../public/css/style3.css">
     <?php endif; ?>
     <script src="../../public/js/script1.js"></script>
+    <script src="../../public/js/hideMessage.js"></script>
     <title>Edycja CPU</title>
     <script src="../../public/js/viewImage.js"></script>
     <script src="../../public/js/addProduct.js"></script>

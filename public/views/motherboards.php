@@ -4,16 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Ta strona to będzie coś wspaniałego">
-    <meta name="keywords" content="strona, wspaniała, niczym">
-    <meta name="author" content="Piotr Żywczak">
     <link rel="icon" type="image/x-icon" href="../../public/img/logo.png">
-    <link rel="stylesheet" type="text/css" href="../../public/css/style80.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/style1.css">
     <?php if ($_SESSION['user_type'] != 'admin') : ?>
-        <link rel="stylesheet" type="text/css" href="../../public/css/style100.css">
+        <link rel="stylesheet" type="text/css" href="../../public/css/style3.css">
     <?php endif; ?>
     <script src="../../public/js/script1.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="../../public/js/addToCart.js"></script>
     <title>Płyty główne</title>
 </head>
