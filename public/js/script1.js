@@ -10,7 +10,7 @@
 
                 var coolerContainers = document.querySelectorAll("main > div");
                 coolerContainers.forEach(function(container) {
-                    var toCartElement = container.querySelector(".to-cart");
+                    var toCartElement = container.querySelector(".addToCart");
                     if (toCartElement) {
                         toCartElement.style.display = "none";
                     }
