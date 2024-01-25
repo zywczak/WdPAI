@@ -55,3 +55,9 @@ Baz danych
 Piotr Żywczak
 
 ## Screenshots:
+![SS1](https://github.com/zywczak/WdPAI/blob/lab2/screenshot1.png)
+![SS2](https://github.com/zywczak/WdPAI/blob/lab2/screenshot2.png)
+![SS3](https://github.com/zywczak/WdPAI/blob/lab2/screenshot3.png)
+![SS4](https://github.com/zywczak/WdPAI/blob/lab2/screenshot4.png)
+![SS5](https://github.com/zywczak/WdPAI/blob/lab2/screenshot5.png)
+![SS6](https://github.com/zywczak/WdPAI/blob/lab2/screenshot6.png)
