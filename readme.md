@@ -7,9 +7,9 @@ E-shop jest to sklep internetowy dla osób szukających części komputerowe.
 ## Instalacja
 
 Aby zainstalować aplikacje należy wykonać następujące kroki:
-
+```bash
 git clone [<TUTAJ_MOJ_LINK>](https://github.com/zywczak/WdPAI)
-
+```
 
 ## Uruchomienie
 
@@ -41,12 +41,12 @@ http://localhost:8080
 - Update informacji o istniejących produktach
 
 ## Technologie:
-PHP
-javascript
-postgresql
-HTML
-CSS
-Baz danych
+- PHP
+- javascript
+- postgresql
+- HTML
+- CSS
+- Baz danych
 
 ## Diagram ERD
 ![Diagram_ERD](https://github.com/zywczak/WdPAI/blob/main/Diagram%20ERD.png)
