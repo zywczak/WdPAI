@@ -1,5 +1,5 @@
 # E-shop
-![Logo Projektu](https://github.com/zywczak/WdPAI/blob/lab01/public/img/logo1.png)
+![Logo Projektu](https://github.com/zywczak/WdPAI/blob/main/public/img/logo1.png)
 
 E-shop jest to sklep internetowy dla osób szukających części komputerowe.
 
@@ -49,15 +49,15 @@ CSS
 Baz danych
 
 ## Diagram ERD
-![Diagram_ERD](https://github.com/zywczak/WdPAI/blob/lab2/Diagram%20ERD.png)
+![Diagram_ERD](https://github.com/zywczak/WdPAI/blob/main/Diagram%20ERD.png)
 
 ## Autorzy
 Piotr Żywczak
 
 ## Screenshots:
-![SS1](https://github.com/zywczak/WdPAI/blob/lab2/screenshot1.png)
-![SS2](https://github.com/zywczak/WdPAI/blob/lab2/screenshot2.png)
-![SS3](https://github.com/zywczak/WdPAI/blob/lab2/screenshot3.png)
-![SS4](https://github.com/zywczak/WdPAI/blob/lab2/screenshot4.png)
-![SS5](https://github.com/zywczak/WdPAI/blob/lab2/screenshot5.png)
-![SS6](https://github.com/zywczak/WdPAI/blob/lab2/screenshot6.png)
+![SS1](https://github.com/zywczak/WdPAI/blob/main/screenshot1.png)
+![SS2](https://github.com/zywczak/WdPAI/blob/main/screenshot2.png)
+![SS3](https://github.com/zywczak/WdPAI/blob/main/screenshot3.png)
+![SS4](https://github.com/zywczak/WdPAI/blob/main/screenshot4.png)
+![SS5](https://github.com/zywczak/WdPAI/blob/main/screenshot5.png)
+![SS6](https://github.com/zywczak/WdPAI/blob/main/screenshot6.png)
