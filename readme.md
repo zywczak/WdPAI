@@ -49,6 +49,7 @@ CSS
 Baz danych
 
 ## Diagram ERD
+![Diagram_ERD](https://github.com/zywczak/WdPAI/blob/lab2/Diagram%20ERD.png)
 
 ## Autorzy
 Piotr Żywczak
