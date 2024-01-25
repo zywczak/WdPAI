@@ -7,9 +7,9 @@ E-shop jest to sklep internetowy dla osób szukających części komputerowe.
 ## Instalacja
 
 Aby zainstalować aplikacje należy wykonać następujące kroki:
-```bash
+
 git clone [<TUTAJ_MOJ_LINK>](https://github.com/zywczak/WdPAI)
-```
+
 
 ## Uruchomienie
 
