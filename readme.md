@@ -56,8 +56,8 @@ Piotr Żywczak
 
 ## Screenshots:
 ![SS1](https://github.com/zywczak/WdPAI/blob/main/screenshot1.png)
+![SS6](https://github.com/zywczak/WdPAI/blob/main/screenshot6.png)
+![SS4](https://github.com/zywczak/WdPAI/blob/main/screenshot4.png)
 ![SS2](https://github.com/zywczak/WdPAI/blob/main/screenshot2.png)
 ![SS3](https://github.com/zywczak/WdPAI/blob/main/screenshot3.png)
-![SS4](https://github.com/zywczak/WdPAI/blob/main/screenshot4.png)
 ![SS5](https://github.com/zywczak/WdPAI/blob/main/screenshot5.png)
-![SS6](https://github.com/zywczak/WdPAI/blob/main/screenshot6.png)
